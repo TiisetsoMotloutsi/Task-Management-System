@@ -2,27 +2,44 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Task Management System</title>
-  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
     <h1>Task Management System</h1>
 
-    <div class="task-input">
-      <input type="text" id="taskTitle" placeholder="Task Title" />
-      <textarea id="taskDesc" placeholder="Task Description"></textarea>
-      <button onclick="addTask()">Add Task</button>
-    </div>
+    <form id="taskForm" class="task-input" autocomplete="off">
+      <input
+        type="text"
+        id="taskTitle"
+        placeholder="Task Title"
+        required
+        maxlength="100"
+      />
+      <textarea
+        id="taskDesc"
+        placeholder="Task Description (optional)"
+        rows="3"
+        maxlength="300"
+      ></textarea>
+      <button type="submit">Add Task</button>
+    </form>
 
     <div class="task-filters">
-      <button onclick="filterTasks('all')">All</button>
-      <button onclick="filterTasks('pending')">Pending</button>
-      <button onclick="filterTasks('completed')">Completed</button>
+      <button type="button" class="filter-btn active" data-filter="all">
+        All
+      </button>
+      <button type="button" class="filter-btn" data-filter="pending">
+        Pending
+      </button>
+      <button type="button" class="filter-btn" data-filter="completed">
+        Completed
+      </button>
     </div>
 
-    <ul id="taskList"></ul>
+    <ul id="taskList" aria-live="polite" aria-label="Task list"></ul>
   </div>
 
   <script src="script.js"></script>
