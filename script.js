@@ -11,7 +11,22 @@ function saveTasks() {
   localStorage.setItem("tasks", JSON.stringify(tasks));
 }
 
-// Render tasks based on current filter
+// Escape HTML to prevent injection
+function escapeHtml(text) {
+  if (!text) return "";
+  return text.replace(/[&<>"']/g, (m) => {
+    switch (m) {
+      case "&": return "&amp;";
+      case "<": return "&lt;";
+      case ">": return "&gt;";
+      case '"': return "&quot;";
+      case "'": return "&#39;";
+      default: return m;
+    }
+  });
+}
+
+// Display tasks based on current filter
 function displayTasks(filter = "all") {
   taskList.innerHTML = "";
 
@@ -39,39 +54,16 @@ function displayTasks(filter = "all") {
         <small>${escapeHtml(task.desc)}</small>
       </div>
       <div>
-        <button aria-label="${
-          task.completed ? "Mark task as pending" : "Mark task as complete"
-        }" onclick="toggleTask(${task.id})">
+        <button aria-label="${task.completed ? "Mark task as pending" : "Mark task as complete"}"
+                onclick="toggleTask(${task.id})">
           ${task.completed ? "Undo" : "Complete"}
         </button>
-        <button class="delete-btn" aria-label="Delete task" onclick="deleteTask(${
-          task.id
-        })">Delete</button>
+        <button class="delete-btn" aria-label="Delete task"
+                onclick="deleteTask(${task.id})">Delete</button>
       </div>
     `;
 
     taskList.appendChild(li);
-  });
-}
-
-// Escape HTML to prevent injection
-function escapeHtml(text) {
-  if (!text) return "";
-  return text.replace(/[&<>"']/g, (m) => {
-    switch (m) {
-      case "&":
-        return "&amp;";
-      case "<":
-        return "&lt;";
-      case ">":
-        return "&gt;";
-      case '"':
-        return "&quot;";
-      case "'":
-        return "&#39;";
-      default:
-        return m;
-    }
   });
 }
 
@@ -88,7 +80,7 @@ function addTask(title, desc) {
   displayTasks(currentFilter);
 }
 
-// Toggle completed state
+// Toggle completed state of a task
 function toggleTask(id) {
   tasks = tasks.map((task) =>
     task.id === id ? { ...task, completed: !task.completed } : task
@@ -97,7 +89,7 @@ function toggleTask(id) {
   displayTasks(currentFilter);
 }
 
-// Delete task
+// Delete task by ID
 function deleteTask(id) {
   if (confirm("Are you sure you want to delete this task?")) {
     tasks = tasks.filter((task) => task.id !== id);
@@ -136,5 +128,5 @@ taskForm.addEventListener("submit", (e) => {
   titleInput.focus();
 });
 
-// Initial render
+// Initial display
 displayTasks();
